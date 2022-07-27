@@ -21,6 +21,7 @@ const renderCountry = function(data, className){
     </article>
     `;
     countriesContainer.insertAdjacentHTML('beforeend', html);
+    countriesContainer.style.opacity = 1;
     
 }
 // const getCountryData = function(country){
@@ -104,40 +105,64 @@ const renderCountry = function(data, className){
 // })
 // getCountryData('dsfsf');
 
-const getJSON = function (url, errorMsg = 'Something went wrong') {
-    return fetch(url).then(response => {
-      if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
-  
-      return response.json();
-    });
-  };
+// const getJSON = function (url, errorMsg = 'Something went wrong') {
+//   return fetch(url).then(response => {
+//     if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
 
-const getCountryData = function (country) {
-    // Country 1
-    getJSON(
-      `https://restcountries.com/v2/name/${country}`,
-      'Country not found'
-    )
+//     return response.json();
+//   });
+// };
+
+
+// const getCountryData = function (country) {
+//   // Country 1
+//   getJSON(
+//     `https://restcountries.com/v2/name/${country}`,
+//     'Country not found'
+//   )
+//     .then(data => {
+//       renderCountry(data[0]);
+//       const neighbour = data[0].borders[0];
+//       if (!neighbour) throw new Error('No neighbour found!');
+//       // Country 2
+//       return getJSON(
+//         `https://restcountries.com/v2/alpha/${neighbour}`,
+//         'Country not found'
+//       );
+//     })
+//     .then(data => renderCountry(data, 'neighbour'))
+//     .catch(err => {
+//       console.error(`${err} 💥💥💥`);
+//       renderError(`Something went wrong 💥💥 ${err.message}. Try again!`);
+//     })
+//     .finally(() => {
+//       countriesContainer.style.opacity = 1;
+//     });
+// };
+// btn.addEventListener('click', function () {
+//   getCountryData('portugal');
+// });
+// getCountryData('australia');
+
+
+  // coding challenge #1
+
+  const whereAmI = function (lat, lng) {
+    fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
+      .then(res => {
+        if (!res.ok) throw new Error(`Problem with geocoding ${res.status}`);
+        return res.json();
+      })
       .then(data => {
-        renderCountry(data[0]);
-        const neighbour = data[0].borders[0];
-        if (!neighbour) throw new Error('No neighbour found!');
-        // Country 2
-        return getJSON(
-          `https://restcountries.com/v2/alpha/${neighbour}`,
-          'Country not found'
-        );
+        console.log(data);
+        console.log(`You are in ${data.city}, ${data.country}`);
+        return fetch(`https://restcountries.com/v2/name/${data.country}`);
       })
-      .then(data => renderCountry(data, 'neighbour'))
-      .catch(err => {
-        console.error(`${err} 💥💥💥`);
-        renderError(`Something went wrong 💥💥 ${err.message}. Try again!`);
+      .then(res => {
+        if (!res.ok) throw new Error(`Country not found (${res.status})`);
+        return res.json();
       })
-      .finally(() => {
-        countriesContainer.style.opacity = 1;
-      });
+      .then(data => renderCountry(data[0]))
+      .catch(err => console.error(`${err.message} 💥`));
   };
-  btn.addEventListener('click', function () {
-    getCountryData('portugal');
-  });
-  getCountryData('australia');
+whereAmI(52.508, 13.381);
