@@ -10,15 +10,16 @@ const btnSubmit = document.getElementById('btn-submit');
 //  bắt sự kiện khi nhấn vào nút submit
 btnSubmit.addEventListener('click', function(){
     const user = new User(
-        inputFirsname.Value,
+        inputFirsname.value,
         inputLastname.value,
         inputUsername.value,
-        inputPassword.value,
-    )
+        inputPassword.value
+    );
     const isValidate = validate(user);
     if(isValidate){
         // thêm user vào mảng userArr
         userArr.push(user);
+        
         // Lấy dữ liệu lưu vào localstorage
         saveToStorage('userArr', userArr);
         alert('Đăng ký thành công');
@@ -31,12 +32,13 @@ function validate(user){
     // check
     let isValidate = true;
     // Không có trường nào bị bỏ trống
-    if(user.firstname  === ''){
-        alert('Vui lòng nhập lại firtname');
-        isValidate = false;
-    }
+    
     if(user.lastname  === ''){
         alert('Vui lòng nhập lại lastname');
+        isValidate = false;
+    }
+    if(user.firstname  === ''){
+        alert('Vui lòng nhập lại firtname');
         isValidate = false;
     }
     if(user.username  === ''){
