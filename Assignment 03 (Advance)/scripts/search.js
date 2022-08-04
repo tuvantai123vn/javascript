@@ -1,7 +1,6 @@
 'use strict';
 
-'use strict'
-if(currentUser){
+if (currentUser) {
     const navPageNum = document.getElementById('nav-page-num');
     const inputQuery = document.getElementById('input-query');
     const btnSubmit = document.getElementById('btn-submit');
@@ -15,13 +14,13 @@ if(currentUser){
 
     navPageNum.style.display = 'none';
     // bắt sự kiện khi bấm vào nút submit
-    btnSubmit.addEventListener('click', function(){
+    btnSubmit.addEventListener('click', function () {
         pageNum.textContent = '1';
-        newsContainer.innerHTML ='';
-        if(inputQuery.value === ''){
+        newsContainer.innerHTML = '';
+        if (inputQuery.value === '') {
             navPageNum.style.display = 'none';
             alert('Vui lòng nhập keywords');
-        }else{
+        } else {
             keywords = inputQuery.value;
             getDatanewskeywords(keywords, 1);
             console.log(keywords);
@@ -29,59 +28,59 @@ if(currentUser){
     })
     console.log(keywords);
     // lấy dữ liệu Data news thông qua API
-    async function getDatanewskeywords(keywords, page){
-        try{
+    async function getDatanewskeywords(keywords, page) {
+        try {
             // kết nối và lấy dữ liệu API
             const res = await fetch(`https://newsapi.org/v2/everything?q=${keywords}&sortBy=relevancy&pageSize=${currentUser.pageSize}&page=${page}&apiKey=8b41ada840524216b0d768c1f61398b6`);
             const data = await res.json();
             console.log(data);
-            if(data.totalResults == 0){
-                navPageNum.style.display ='none';
+            if (data.totalResults == 0) {
+                navPageNum.style.display = 'none';
                 throw new Error
-                ('Không có bài báo phù hợp với tìm kiếm của bạn');
+                    ('Không có bài báo phù hợp với tìm kiếm của bạn');
             }
             navPageNum.style.display = 'block';
             displayNewList(data);
 
-            
-        }catch(err){
+
+        } catch (err) {
             alert(err.message);
         }
     }
     // kiểm tra nếu textcontent = 1 thì ẩn btnPrev
-    function checkBtnPrev(){
-        if(pageNum.textContent == 1){
+    function checkBtnPrev() {
+        if (pageNum.textContent == 1) {
             btnPrev.style.display = 'none';
-        }else{
+        } else {
             btnPrev.style.display = 'block';
         }
     }
     // kiểm tra nếu textcontent bằng số lượng bài viết chia cho pageSize thì ẩn btnNext
-    function checkBtnNext(){
-        if(pageNum.textContent == Math.ceil(totalResults / currentUser.pageSize)){
-        btnNext.style.display = 'none';
-        }else{
+    function checkBtnNext() {
+        if (pageNum.textContent == Math.ceil(totalResults / currentUser.pageSize)) {
+            btnNext.style.display = 'none';
+        } else {
             btnNext.style.display = 'block';
         }
     }
     // khi người dùng nhấn vào nút btnPrev thì lùi lại 1 trang
-    btnPrev.addEventListener('click', function(){
+    btnPrev.addEventListener('click', function () {
         getDatanewskeywords(keywords, --pageNum.textContent);
     })
     // khi người dùng nhấn vào nút btnNext thì tăng lên 1 trang
-    btnNext.addEventListener('click', function(){
+    btnNext.addEventListener('click', function () {
         getDatanewskeywords(keywords, ++pageNum.textContent);
     })
-  
+
 
     // hàm này dùng để render các bài viết ra màn hình 
-    function displayNewList(data){
+    function displayNewList(data) {
         totalResults = data.totalResults;
         checkBtnPrev();
         checkBtnNext();
         let html = '';
-        data.articles.forEach(function(articles){
-            html +=`
+        data.articles.forEach(function (articles) {
+            html += `
             <div id="news-container">
                     <div class="card flex-row flex-wrap">
                         <div class="card mb-3" style="">
@@ -105,7 +104,7 @@ if(currentUser){
         });
         newsContainer.innerHTML = html;
     }
-}else{
+} else {
     alert('Vui lòng đăng nhập hoặc đăng ký nếu chưa có tài khoản');
     window.location.href = '../index.html';
 }
