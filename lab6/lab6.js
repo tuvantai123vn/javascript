@@ -9,4 +9,4 @@ const printForecast = function (arr) {
     }
     console.log('...' + str);
 };
-printForecast(data1);
+printForecast(data2);
